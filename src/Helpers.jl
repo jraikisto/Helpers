@@ -140,7 +140,7 @@ end
 """
     onedim(v::AbstractArray)
 
-Check if array has information in only one dimension and return on dimensional array of the same array,
+Check if array has information in only one dimension and return one dimensional version of the same array,
 otherwise, raise an error.
 
 
