@@ -157,7 +157,7 @@ julia> onedim(rand(1, 4, 1))
 """
 function onedim(v::AbstractArray)
 	s = size(v)
-	if length(s) == 1; return s; end
+	if length(s) == 1; return v; end
 	isz = [i == 0 for i in s]
 	if any(isz)
 		@warn "There is a dimension with length zero"
