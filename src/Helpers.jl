@@ -78,7 +78,8 @@ function inturns(a::AbstractArray, b::AbstractArray)
 end
 
 function combine(fun::String, list::AbstractArray)
-	#This should check that <fun> actually is an operator that can be used in this manner
+	#This should check that <fun> actually is an operator that can be used in this manner.
+	println("0.1.0-beta")
 	list = onedim(list)
 	l = length(list)
 	if l == 2
