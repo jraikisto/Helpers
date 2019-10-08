@@ -157,6 +157,7 @@ julia> onedim(rand(1, 4, 1))
 """
 function onedim(v::AbstractArray)
 	s = size(v)
+	if length(s) == 1; return s; end
 	isz = [i == 0 for i in s]
 	if any(isz)
 		@warn "There is a dimension with length zero"
@@ -184,8 +185,11 @@ function inturns(a::AbstractArray, b::AbstractArray)
 end
 
 function combine(fun::String, list::AbstractArray)
+	println(1)
 	list = onedim(list)
+	println(2)
 	l = length(list)
+	println(3)
 	if l == 2
 		start=string(list[1]) * fun * string(list[2])
 		return eval(Meta.parse(start))
