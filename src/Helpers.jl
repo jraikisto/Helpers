@@ -137,15 +137,6 @@ function load(filename::String)
 	return open(deserialize, filename, "r")
 end
 
-function iszip(i::Number)
-	if i == 0
-		@warn "There is a dimension with length zero"
-		i > 1
-	else
-		i > 1
-	end
-end
-
 """
     onedim(v::AbstractArray)
 
@@ -166,7 +157,11 @@ julia> onedim(rand(1, 4, 1))
 """
 function onedim(v::AbstractArray)
 	s = size(v)
-	goods = [iszip(i) for i in s]
+	isz = [i == 0 for i in s]
+	if any(isz)
+		@warn "There is a dimension with length zero"
+	end
+	goods = [i > 1 for i in s]
 	if sum(goods) > 1
 		@error "Array has information in more than one dimension"
 	else
