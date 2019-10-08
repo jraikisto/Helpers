@@ -137,21 +137,6 @@ function load(filename::String)
 	return open(deserialize, filename, "r")
 end
 
-function combine(fun::String, list::AbstractVector)
-	l = length(list)
-	if l == 2
-		start=string(list[1]) * fun * string(list[2])
-		return eval(Meta.parse(start))
-	elseif l == 1
-		@error "Vector must have at least two objects!"
-	end
-	start=string(list[1])
-	for i in list[2:end]
-		start = start * fun * string(i)
-	end
-	return eval(Meta.parse(start))
-end
-
 function iszip(i::Number)
 	if i == 0
 		@warn "There is a dimension with length zero"
@@ -186,6 +171,22 @@ function inturns(a::AbstractArray, b::AbstractArray)
 	odds = evens .- 1
 	out[odds] .= a;out[evens] .= b
 	return out
+end
+
+function combine(fun::String, list::AbstractArray)
+	list = onedim(list)
+	l = length(list)
+	if l == 2
+		start=string(list[1]) * fun * string(list[2])
+		return eval(Meta.parse(start))
+	elseif l == 1
+		@error "Vector must have at least two objects!"
+	end
+	start=string(list[1])
+	for i in list[2:end]
+		start = start * fun * string(i)
+	end
+	return eval(Meta.parse(start))
 end
 
 remove_nans(arr::AbstractArray) = filter(x -> !isnan(x), arr)
@@ -233,4 +234,3 @@ function parse_date(x::AbstractString, century::Int)
 end
 
 end
-
