@@ -1,5 +1,4 @@
 __precompile__()
-#TODO:
 
 module Helpers
 
