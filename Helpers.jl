@@ -147,11 +147,24 @@ function iszip(i::Number)
 end
 
 """
-		onedim(v::AbstractArray)
+    onedim(v::AbstractArray)
 
-Checks if array has information in only one dimension
+Check if array has information in only one dimension and return on dimensional array of the same array,
+otherwise, raise an error.
+
+
+# Examples
+```julia-repl
+julia> onedim(rand(1, 4, 1))
+4-element Array{Float64,1}:
+ 0.8415258048874592
+ 0.787432396149214
+ 0.8292044884383356
+ 0.041755082648925024
+
+
+```
 """
-
 function onedim(v::AbstractArray)
 	s = size(v)
 	goods = [iszip(i) for i in s]
