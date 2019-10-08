@@ -162,7 +162,6 @@ julia> onedim(rand(1, 4, 1))
  0.8292044884383356
  0.041755082648925024
 
-
 ```
 """
 function onedim(v::AbstractArray)
