@@ -146,16 +146,19 @@ function iszip(i::Number)
 	end
 end
 
+"""
+		onedim(v::AbstractArray)
+
+Checks if array has information in only one dimension
+"""
 
 function onedim(v::AbstractArray)
 	s = size(v)
 	goods = [iszip(i) for i in s]
-	if sum(goods) == 1
-		return vec(v)
-	elseif sum(goods) > 1
+	if sum(goods) > 1
 		@error "Array has information in more than one dimension"
 	else
-		@error "Size of "
+		return vec(v)
 	end
 end
 
