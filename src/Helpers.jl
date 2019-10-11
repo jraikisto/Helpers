@@ -80,22 +80,43 @@ function inturns(a::AbstractArray, b::AbstractArray)
 	return out
 end
 
-function j(c::Any)
-	typeof(c)<:String ? "\"$(c)\"" : return string(c)
-end
 function combine(fun::String, list::AbstractArray)
 	#This should check that <fun> actually is an operator that can be used in this manner.
+	t = typeof(list[1])
+	for k in list[2:end]
+		if typeof(k) != t
+			@error "All elements must be of same type"
+		end
+	end
+
+	parseable = false
+	if t<:String
+		for k in list
+			try parse(Float32, k)
+				parseable = true
+			catch
+				nothing
+			end
+		end
+	end
 	list = onedim(list)
 	l = length(list)
 	if l == 2
-		start=j(list[1]) * fun * j(list[2])
+		start=string(list[1]) * fun * string(list[2])
 		return eval(Meta.parse(start))
 	elseif l == 1
 		@error "Vector must have at least two objects!"
 	end
-	start=j(list[1])
-	for i in list[2:end]
-		start = start * fun * j(i)
+	if parseable
+		start="\"" * string(list[1]) * "\""
+		for i in list[2:end]
+			start = start * fun * "\"" * string(i) * "\""
+		end
+	else
+		start=string(list[1])
+		for i in list[2:end]
+			start = start * fun * string(i)
+		end
 	end
 	return eval(Meta.parse(start))
 end
