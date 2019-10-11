@@ -5,7 +5,7 @@ module Helpers_test
 
 using DelimitedFiles, Dates, Serialization
 
-export only, parse_date, save, load, get_name, combine, onedim, inturns
+export only, parse_date, save, load, get_name, combine, onedim, inturns, keep_fins
 
 
 
@@ -88,7 +88,7 @@ function combine(func::Function, list::AbstractArray)
 	end
 
 	try func(list[1], list[2])
-		
+
 	catch
 		@error "Your function can not be used with $(list[1]) and $(list[2])"
 	end
@@ -104,7 +104,7 @@ function combine(func::Function, list::AbstractArray)
 	return s
 end
 
-remove_nans(arr::AbstractArray) = filter(x -> !isnan(x), arr)
+keep_fins(arr::AbstractArray) = filter(x -> isfinite(x), arr)
 
 # FIXME: This is helpful because broadcasting does not work for Pair or Regex
 # objects in Julia 1.0. Can be dropped after those limitations are lifted.
