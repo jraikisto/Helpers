@@ -195,12 +195,12 @@ function combine(fun::String, list::AbstractArray)
 	list = onedim(list)
 	l = length(list)
 	if l == 2
-		start=string(list[1]) * fun * j(list[2])
+		start=j(list[1]) * fun * j(list[2])
 		return eval(Meta.parse(start))
 	elseif l == 1
 		@error "Vector must have at least two objects!"
 	end
-	start=string(list[1])
+	start=j(list[1])
 	for i in list[2:end]
 		start = start * fun * j(i)
 	end
