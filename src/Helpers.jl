@@ -79,7 +79,7 @@ function inturns(a::AbstractArray, b::AbstractArray)
 end
 
 """
-    combine(fun::String, list::AbstractArray)
+    combine(fun::Function, list::AbstractArray)
 
 Put expression <fun> between each item of <list> and execute.
 
