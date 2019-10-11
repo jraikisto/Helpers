@@ -1,9 +1,7 @@
 __precompile__()
-#dev branch
 #TODO:
 #-
-
-module Helpers
+module Helpers_test
 
 using DelimitedFiles, Dates, Serialization
 
@@ -119,7 +117,7 @@ readtsv(cmd::Base.AbstractCmd; kwargs...) =
 	open(f -> readtsv(f; kwargs...), cmd)
 readtsv(tsv_path::AbstractString; kwargs...) =
 	tsv_path == "-" ? readtsv(STDIN; kwargs...) : open(f -> readtsv(f; kwargs...), expanduser(tsv_path))
-
+#=
 function hierarchical_order(args...)
 	for a in 2:length(args); @assert(length(args[a]) == length(args[1])); end
 	function lt(a, b)
@@ -134,6 +132,6 @@ function hierarchical_order(args...)
 		end
 	end
 	return eval(Meta.parse(start))
-end
+end=#
 
 end
