@@ -19,12 +19,23 @@ println()
 
 @info "testing bad function"
 k = [5, 4]
-try combine(||, k)
+try combine(.|, k)
     @error "here should be an error"
     exit()
 catch e
     @info "got through with $(e)"
 end
 println()
+
+@info "testing ascending"
+k = collect(1:1_000_000)
+try combine(<, k)
+    @info "got through"
+catch e
+    @info "got through with $(e)"
+    exit()
+end
+println()
+
 
 @info "All tests passed succesfully"
