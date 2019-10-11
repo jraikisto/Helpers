@@ -37,5 +37,27 @@ catch e
 end
 println()
 
+@info "testing equality"
+k = ones(1_000_000)
+try combine(==, k)
+    @info "got through"
+catch e
+    @info "got through with $(e)"
+    exit()
+end
+if !combine(==, k); @error "== does not work"; exit(); end
+println()
+
+@info "Testing keep fins"
+if length(keep_fins(ones(1_000_000))) != 1_000_000
+    @error "$(length(keep_fins(ones(1_000_000))))"
+    exit()
+end
+
+if length(keep_fins(vcat(ones(1_000_000), [NaN, Inf]))) != 1_000_000
+    @error "$(length(vcat(keep_fins(ones(1_000_000)), [NaN, Inf])))"
+    exit()
+end
+
 
 @info "All tests passed succesfully"
