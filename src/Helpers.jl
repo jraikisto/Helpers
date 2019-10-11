@@ -207,6 +207,18 @@ function combine(fun::String, list::AbstractArray)
 	return eval(Meta.parse(start))
 end
 
+function combine(func, list)
+	if length(list) == 2
+		s = func(list[1], list[2])
+	else
+		s = func(list[1], list[2])
+		for k in list[3:end]
+			s = func(s, k)
+		end
+	end
+	return s
+end
+
 remove_nans(arr::AbstractArray) = filter(x -> !isnan(x), arr)
 
 # FIXME: This is helpful because broadcasting does not work for Pair or Regex
