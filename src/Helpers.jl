@@ -1,9 +1,7 @@
 __precompile__()
-#dev branch
 #TODO:
 #-
-
-module Helpers
+module Helpers_test
 
 using DelimitedFiles, Dates, Serialization
 
@@ -92,8 +90,9 @@ julia> combine("<", [1, 4, 15, 46]) #This creates 1<4<15<46 and executes it
 true
 ```
 """
-function combine(fun::String, list::AbstractArray)
+function combine(fun::Function, list::AbstractArray)
 	#This should check that <fun> actually is an operator that can be used in this manner.
+	list = onedim(list)
 	t = typeof(list[1])
 	for k in list[2:end]
 		if typeof(k) != t
@@ -101,28 +100,49 @@ function combine(fun::String, list::AbstractArray)
 		end
 	end
 
-	parseable = false
-	if t<:String
-		for k in list
-			try parse(Float32, k)
-				parseable = true
-			catch
-				nothing
-			end
+	try func(list[1], list[2])
+
+	catch
+		@error "Your function can not be used with $(list[1]) and $(list[2])"
+	end
+
+	if length(list) == 2
+		s = func(list[1], list[2])
+	else
+		s = func(list[1], list[2])
+		for k in list[3:end]
+			s = func(s, k)
 		end
 	end
-	list = onedim(list)
-	l = length(list)
-	if l == 2
-		start=string(list[1]) * fun * string(list[2])
-		return eval(Meta.parse(start))
-	elseif l == 1
-		@error "Vector must have at least two objects!"
-	end
-	if parseable
-		start="\"" * string(list[1]) * "\""
-		for i in list[2:end]
-			start = start * fun * "\"" * string(i) * "\""
+	return s
+end
+
+remove_nans(arr::AbstractArray) = filter(x -> !isnan(x), arr)
+
+# FIXME: This is helpful because broadcasting does not work for Pair or Regex
+# objects in Julia 1.0. Can be dropped after those limitations are lifted.
+Base.replace(strings::AbstractArray, pattern, sub) =
+	map(s -> replace(s, pattern => sub), strings)
+Base.replace(s::AbstractString, pattern, sub) = replace(s, pattern => sub)
+
+# These allow in() and the in-operator to be used to test if a string
+# contains a pattern (where pattern can be a string or regular expression).
+Base.in(pattern::String, s::AbstractString) = occursin(pattern, s)
+Base.in(r::Regex, s::AbstractString) = occursin(r, s)
+#Base.broadcastable(r::Regex) = Ref(r)  # Built into Julia-1.1.0
+
+readtsv(tsv_file::IO; text=false) = readdlm(tsv_file, '\t', text ? String : Any)
+readtsv(cmd::Base.AbstractCmd; kwargs...) =
+	open(f -> readtsv(f; kwargs...), cmd)
+readtsv(tsv_path::AbstractString; kwargs...) =
+	tsv_path == "-" ? readtsv(STDIN; kwargs...) : open(f -> readtsv(f; kwargs...), expanduser(tsv_path))
+#=
+function hierarchical_order(args...)
+	for a in 2:length(args); @assert(length(args[a]) == length(args[1])); end
+	function lt(a, b)
+		for c in 1:length(args)
+			if args[c][a] < args[c][b]; return true; end
+			if args[c][a] > args[c][b]; return false; end
 		end
 	else
 		start=string(list[1])
@@ -131,6 +151,6 @@ function combine(fun::String, list::AbstractArray)
 		end
 	end
 	return eval(Meta.parse(start))
-end
+end=#
 
 end
