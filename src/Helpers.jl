@@ -90,7 +90,7 @@ julia> combine(<, [1, 4, 15, 46]) #This creates 1<4<15<46 and executes it
 true
 ```
 """
-function combine(fun::Function, list::AbstractArray)
+function combine(func::Function, list::AbstractArray)
 	#This should check that <fun> actually is an operator that can be used in this manner.
 	list = onedim(list)
 	t = typeof(list[1])
