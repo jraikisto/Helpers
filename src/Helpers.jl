@@ -87,6 +87,12 @@ function combine(func::Function, list::AbstractArray)
 		end
 	end
 
+	try func(list[1], list[2])
+		
+	catch
+		@error "Your function can not be used with $(list[1]) and $(list[2])"
+	end
+
 	if length(list) == 2
 		s = func(list[1], list[2])
 	else

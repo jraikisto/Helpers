@@ -17,5 +17,14 @@ catch e
 end
 println()
 
+@info "testing bad function"
+k = [5, 4]
+try combine(||, k)
+    @error "here should be an error"
+    exit()
+catch e
+    @info "got through with $(e)"
+end
+println()
 
 @info "All tests passed succesfully"
