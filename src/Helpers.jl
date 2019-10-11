@@ -94,6 +94,23 @@ true
 """
 function combine(fun::String, list::AbstractArray)
 	#This should check that <fun> actually is an operator that can be used in this manner.
+	t = typeof(list[1])
+	for k in list[2:end]
+		if typeof(k) != t
+			@error "All elements must be of same type"
+		end
+	end
+
+	parseable = false
+	if t<:String
+		for k in list
+			try parse(Float32, k)
+				parseable = true
+			catch
+				nothing
+			end
+		end
+	end
 	list = onedim(list)
 	l = length(list)
 	if l == 2
@@ -102,9 +119,16 @@ function combine(fun::String, list::AbstractArray)
 	elseif l == 1
 		@error "Vector must have at least two objects!"
 	end
-	start=string(list[1])
-	for i in list[2:end]
-		start = start * fun * string(i)
+	if parseable
+		start="\"" * string(list[1]) * "\""
+		for i in list[2:end]
+			start = start * fun * "\"" * string(i) * "\""
+		end
+	else
+		start=string(list[1])
+		for i in list[2:end]
+			start = start * fun * string(i)
+		end
 	end
 	return eval(Meta.parse(start))
 end
