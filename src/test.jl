@@ -37,5 +37,16 @@ catch e
 end
 println()
 
+@info "testing equality"
+k = ones(1_000_000)
+try combine(==, k)
+    @info "got through"
+catch e
+    @info "got through with $(e)"
+    exit()
+end
+if !combine(==, k); @error "== does not work"; exit(); end 
+println()
+
 
 @info "All tests passed succesfully"
