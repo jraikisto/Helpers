@@ -86,7 +86,7 @@ Put expression <fun> between each item of <list> and execute.
 
 # Examples
 ```julia-repl
-julia> combine("<", [1, 4, 15, 46]) #This creates 1<4<15<46 and executes it
+julia> combine(<, [1, 4, 15, 46]) #This creates 1<4<15<46 and executes it
 true
 ```
 """
